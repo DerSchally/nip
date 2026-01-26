@@ -18,14 +18,20 @@ export const validatePLZ = async (plz) => {
   return /^\d{4}$/.test(plz);
 };
 
-// Mock "working days" calculation - just adds days, ignores real logic
+// Date calculations per Pflichtenheft:
+// - Gültig ab: Heute + 7 Kalendertage (default)
+// - Gültig bis: Gültig ab + 3 Monate - 1 Kalendertag (default)
 export const calculateDefaultDates = () => {
   const today = new Date();
+  
+  // Gültig ab: today + 7 calendar days
   const startDate = new Date(today);
-  startDate.setDate(today.getDate() + 7); // +7 days
+  startDate.setDate(today.getDate() + 7);
 
+  // Gültig bis: startDate + 3 months - 1 day
   const endDate = new Date(startDate);
-  endDate.setMonth(startDate.getMonth() + 3); // +3 months
+  endDate.setMonth(startDate.getMonth() + 3);
+  endDate.setDate(endDate.getDate() - 1); // -1 KT per Pflichtenheft
 
   return { startDate, endDate };
 };
